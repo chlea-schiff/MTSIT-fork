@@ -129,7 +129,7 @@ def collate_superv(data, max_len=None):
 
     targets = torch.stack(labels, dim=0)  # (batch_size, num_labels)
 
-    padding_masks = padding_mask(torch.tensor(lengths, dtype=torch.int16),
+    padding_masks = padding_mask(torch.tensor(lengths, dtype=torch.int64),
                                  max_len=max_len)  # (batch_size, padded_length) boolean tensor, "1" means keep
 
     return X, targets, padding_masks, IDs
@@ -201,7 +201,7 @@ def compensate_masking(X, mask):
     # number of unmasked elements of feature vector for each time step
     num_active = torch.sum(mask, dim=-1).unsqueeze(-1)  # (batch_size, seq_length, 1)
     # to avoid division by 0, set the minimum to 1
-    num_active = torch.max(num_active, torch.ones(num_active.shape, dtype=torch.int16))  # (batch_size, seq_length, 1)
+    num_active = torch.max(num_active, torch.ones(num_active.shape, dtype=torch.int64))  # (batch_size, seq_length, 1)
     return X.shape[-1] * X / num_active
 
 
@@ -240,7 +240,7 @@ def collate_unsuperv(data, max_len=None, mask_compensation=False):
     if mask_compensation:
         X = compensate_masking(X, target_masks)
 
-    padding_masks = padding_mask(torch.tensor(lengths, dtype=torch.int16), max_len=max_len)  # (batch_size, padded_length) boolean tensor, "1" means keep
+    padding_masks = padding_mask(torch.tensor(lengths, dtype=torch.int64), max_len=max_len)  # (batch_size, padded_length) boolean tensor, "1" means keep
     target_masks = ~target_masks  # inverse logic: 0 now means ignore, 1 means predict
     return X, targets, target_masks, padding_masks, IDs
 

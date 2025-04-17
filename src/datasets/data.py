@@ -9,7 +9,7 @@ from itertools import repeat, chain
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-from sktime.utils import load_data
+from sktime.datasets import load_arrow_head
 
 from datasets import utils
 
