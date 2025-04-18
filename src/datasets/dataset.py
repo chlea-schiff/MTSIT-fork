@@ -44,8 +44,10 @@ class ImputationDataset(Dataset):
                         mask[i,k] = 0
                     
         else:
-            mask = noise_mask(X, self.masking_ratio, self.mean_mask_length, self.mode, self.distribution,
-                          self.exclude_feats) # (seq_length, feat_dim) boolean array
+            #---- REPLACE STOCHASTIC MASKING WITH HIP MASKING ----
+            # mask = noise_mask(X, self.masking_ratio, self.mean_mask_length, self.mode, self.distribution,
+                        #   self.exclude_feats) # (seq_length, feat_dim) boolean array
+            mask = noise_mask_hip(X)
         
         if np.any(np.isnan(X)):
             X = self.labels_df.loc[self.IDs[ind]].values
@@ -281,6 +283,20 @@ def noise_mask(X, masking_ratio, lm=3, mode='separate', distribution='geometric'
         else:
             mask = np.tile(np.random.choice(np.array([True, False]), size=(X.shape[0], 1), replace=True,
                                             p=(1 - masking_ratio, masking_ratio)), X.shape[1])
+
+    return mask
+
+def noise_mask_hip(X):
+    """
+    Creates a random boolean mask of the same shape as X, with 0s at places where a feature should be masked. Only HIP feature should be masked.
+    Args:
+        X: (seq_length, feat_dim) numpy array of features corresponding to a single sample
+
+    Returns:
+        boolean numpy array with the same shape as X, with 0s at places where a feature should be masked
+    """
+    mask = np.ones(X.shape, dtype=bool)
+    mask[:, 3] = 0 # HIP VM should be masked
 
     return mask
 
