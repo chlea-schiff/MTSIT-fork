@@ -219,7 +219,15 @@ def validate(val_evaluator, tensorboard_writer, config, best_metrics, best_value
         best_metrics = aggr_metrics.copy()
 
         pred_filepath = os.path.join(config['pred_dir'], 'best_predictions')
-        np.savez(pred_filepath, **per_batch)
+
+        cleaned_per_batch = {}
+        for k, v in per_batch.items():
+            try:
+                cleaned_per_batch[k] = np.asarray(v)
+            except Exception as e:
+                logger.warning(f"Skipping key '{k}' when saving predictions: {e}")
+
+        np.savez(pred_filepath, **cleaned_per_batch)
 
     return aggr_metrics, best_metrics, best_value
 

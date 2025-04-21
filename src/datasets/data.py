@@ -298,7 +298,7 @@ class PandasTSData(BaseData):
     """
 
     def __init__(self, root_dir, file_list=None, pattern=None, n_proc=1, limit_size=None, config=None):
-
+        logger.info("Initializing PandasTSData ...")
         #self.set_num_processes(n_proc=n_proc)
 
         self.config = config

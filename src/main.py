@@ -50,9 +50,11 @@ def main(config):
 
     # Build data
     logger.info("Loading and preprocessing data ...")
+    logger.info(" --- Creating data class")
     data_class = data_factory[config['data_class']]
     my_data = data_class(config['data_dir'], pattern=config['pattern'], n_proc=config['n_proc'], limit_size=config['limit_size'], config=config)
     feat_dim = my_data.feature_df.shape[1]  # dimensionality of data features
+    logger.info("--- Extracting labels ")
     if config['task'] == 'classification':
         validation_method = 'StratifiedShuffleSplit'
         labels = my_data.labels_df.values.flatten()
@@ -61,6 +63,7 @@ def main(config):
         labels = None
 
     # Split dataset
+    logger.info("--- Splitting dataset")
     test_data = my_data
     test_indices = None  # will be converted to empty list in `split_dataset`, if also test_set_ratio == 0
     val_data = my_data
