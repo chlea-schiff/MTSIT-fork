@@ -394,9 +394,9 @@ class UnsupervisedRunner(BaseRunner):
 
         os.makedirs("visualize_data", exist_ok = True)
 
-        pred_total = pred_total.reshape(pred_total.shape[0], pred_total.shape[2], pred_total.shape[1])
-        target_total = target_total.reshape(target_total.shape[0], target_total.shape[2], target_total.shape[1])
-        target_mask_total = target_mask_total.reshape(target_mask_total.shape[0], target_mask_total.shape[2], target_mask_total.shape[1])
+        # pred_total = pred_total.reshape(pred_total.shape[0], pred_total.shape[2], pred_total.shape[1])
+        # target_total = target_total.reshape(target_total.shape[0], target_total.shape[2], target_total.shape[1])
+        # target_mask_total = target_mask_total.reshape(target_mask_total.shape[0], target_mask_total.shape[2], target_mask_total.shape[1])
         np.save("visualize_data/predictions", pred_total)
         np.save("visualize_data/target_mask", target_mask_total)
         np.save("visualize_data/target", target_total)
