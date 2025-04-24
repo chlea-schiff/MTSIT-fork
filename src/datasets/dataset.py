@@ -296,7 +296,8 @@ def noise_mask_hip(X):
         boolean numpy array with the same shape as X, with 0s at places where a feature should be masked
     """
     mask = np.ones(X.shape, dtype=bool)
-    mask[:, 3] = 0 # HIP VM should be masked
+    feat_dim = X.shape[1]
+    mask[:, feat_dim-1] = 0 # HIP VM should be masked
 
     return mask
 
