@@ -320,7 +320,7 @@ class UnsupervisedRunner(BaseRunner):
         self.epoch_metrics['loss'] = epoch_loss
         return self.epoch_metrics
 
-    def evaluate(self, epoch_num=None, keep_all=True):
+    def evaluate(self, epoch_num=None, keep_all=True, output_dir=None):
 
         self.model = self.model.eval()
 
@@ -392,14 +392,16 @@ class UnsupervisedRunner(BaseRunner):
             total_active_elements += len(loss)
             epoch_loss += batch_loss  # add total loss of batch
 
-        os.makedirs("visualize_data", exist_ok = True)
+        save_dir = os.path.join(output_dir, "visualize_data") if output_dir else "visualize_data"
+        os.makedirs(save_dir, exist_ok=True)
+        print("Absolute path to visualize_data: ", os.path.abspath(save_dir))
 
         # pred_total = pred_total.reshape(pred_total.shape[0], pred_total.shape[2], pred_total.shape[1])
         # target_total = target_total.reshape(target_total.shape[0], target_total.shape[2], target_total.shape[1])
         # target_mask_total = target_mask_total.reshape(target_mask_total.shape[0], target_mask_total.shape[2], target_mask_total.shape[1])
-        np.save("visualize_data/predictions", pred_total)
-        np.save("visualize_data/target_mask", target_mask_total)
-        np.save("visualize_data/target", target_total)
+        np.save(os.path.join(save_dir, "predictions"), pred_total)
+        np.save(os.path.join(save_dir, "target_mask"), target_mask_total)
+        np.save(os.path.join(save_dir, "target"), target_total)
 
         epoch_loss = epoch_loss / total_active_elements  # average loss per element for whole epoch
         self.epoch_metrics['epoch'] = epoch_num

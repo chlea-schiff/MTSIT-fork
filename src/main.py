@@ -185,7 +185,7 @@ def main(config):
                                  collate_fn=lambda x: collate_fn(x, max_len=model.max_len))
         test_evaluator = runner_class(model, test_loader, device, loss_module,
                                             print_interval=config['print_interval'], console=config['console'])
-        aggr_metrics_test, per_batch_test = test_evaluator.evaluate(keep_all=True)
+        aggr_metrics_test, per_batch_test = test_evaluator.evaluate(keep_all=True, output_dir=config['output_dir'])
         print_str = 'Test Summary: '
         for k, v in aggr_metrics_test.items():
             print_str += '{}: {} | '.format(k, v)
